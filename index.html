@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Осмотр Техники</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: var(--bg);
+            margin: 0; padding: 15px;
+        }
+
+        .category {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .category-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .check-item { padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        .item-name { display: block; margin-bottom: 12px; font-weight: 500; }
+
+        .btn-group { display: flex; gap: 10px; }
+
+        .btn-group label {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 2px solid transparent;
+            background: #e2e8f0;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+
+        .btn-group input { display: none; }
+
+        .btn-group input[value="ok"]:checked + label {
+            background: #dcfce7;
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .btn-group input[value="bad"]:checked + label {
+            background: #fee2e2;
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Тусклость невыбранных элементов */
+        .btn-group input:not(:checked) + label { opacity: 0.5; }
+        .btn-group input:checked + label { opacity: 1; }
+
+        .photo-section {
+            margin-top: 10px;
+            display: none;
+            background: #fff7ed;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px dashed #fdba74;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header" style="text-align: center; margin-bottom: 20px;">
+        <h2 style="margin:0">Ежедневный осмотр</h2>
+        <p style="color: #64748b; margin: 5px 0;">Заполните перед началом смены</p>
+    </div>
+
+    <div class="category">
+        <div class="category-title">Ходовая часть</div>
+        
+        <div class="check-item">
+            <span class="item-name">Колёса / Шины (давление, износ)</span>
+            <div class="btn-group">
+                <input type="radio" name="wheels" id="wheels_ok" value="ok">
+                <label for="wheels_ok" onclick="togglePhoto('photo_wheels', false)">ОК</label>
+                <input type="radio" name="wheels" id="wheels_bad" value="bad">
+                <label for="wheels_bad" onclick="togglePhoto('photo_wheels', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_wheels" class="photo-section">
+                <span>Сделайте фото повреждения:</span>
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+
+        <div class="check-item">
+            <span class="item-name">Гусеницы (болты, катки, натяжение)</span>
+            <div class="btn-group">
+                <input type="radio" name="tracks" id="tracks_ok" value="ok">
+                <label for="tracks_ok" onclick="togglePhoto('photo_tracks', false)">ОК</label>
+                <input type="radio" name="tracks" id="tracks_bad" value="bad">
+                <label for="tracks_bad" onclick="togglePhoto('photo_tracks', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_tracks" class="photo-section">
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <div class="category-title">Кузов и кабина</div>
+        
+        <div class="check-item">
+            <span class="item-name">Стёкла, зеркала, свет</span>
+            <div class="btn-group">
+                <input type="radio" name="glass" id="glass_ok" value="ok">
+                <label for="glass_ok" onclick="togglePhoto('photo_glass', false)">ОК</label>
+                <input type="radio" name="glass" id="glass_bad" value="bad">
+                <label for="glass_bad" onclick="togglePhoto('photo_glass', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_glass" class="photo-section">
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+
+        <div class="check-item">
+            <span class="item-name">Огнетушитель (давление, срок)</span>
+            <div class="btn-group">
+                <input type="radio" name="fire" id="fire_ok" value="ok">
+                <label for="fire_ok" onclick="togglePhoto('photo_fire', false)">ОК</label>
+                <input type="radio" name="fire" id="fire_bad" value="bad">
+                <label for="fire_bad" onclick="togglePhoto('photo_fire', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_fire" class="photo-section">
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <div class="category-title">Двигатель и уровни</div>
+        
+        <div class="check-item">
+            <span class="item-name">Масло (ДВС, КПП, Гидравлика)</span>
+            <div class="btn-group">
+                <input type="radio" name="oil" id="oil_ok" value="ok">
+                <label for="oil_ok" onclick="togglePhoto('photo_oil', false)">ОК</label>
+                <input type="radio" name="oil" id="oil_bad" value="bad">
+                <label for="oil_bad" onclick="togglePhoto('photo_oil', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_oil" class="photo-section">
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+
+        <div class="check-item">
+            <span class="item-name">Антифриз / Радиатор</span>
+            <div class="btn-group">
+                <input type="radio" name="coolant" id="coolant_ok" value="ok">
+                <label for="coolant_ok" onclick="togglePhoto('photo_coolant', false)">ОК</label>
+                <input type="radio" name="coolant" id="coolant_bad" value="bad">
+                <label for="coolant_bad" onclick="togglePhoto('photo_coolant', true)">ПРОБЛЕМА</label>
+            </div>
+            <div id="photo_coolant" class="photo-section">
+                <input type="file" accept="image/*" capture="camera" style="margin-top: 5px; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <button class="submit-btn" onclick="handleSubmit()">ОТПРАВИТЬ ОТЧЕТ</button>
+
+    <script>
+    // Универсальная функция показа/скрытия фото
+    function togglePhoto(id, show) {
+        const el = document.getElementById(id);
+        if(el) {
+            el.style.display = show ? 'block' : 'none';
+        }
+    }
+
+    async function handleSubmit() {
+        // Проверка: сколько кнопок выбрано
+        const checkedInputs = document.querySelectorAll('input[type="radio"]:checked');
+        const totalQuestions = 6; // У нас сейчас 6 пунктов
+
+        if (checkedInputs.length < totalQuestions) {
+            alert('Пожалуйста, ответьте на все ' + totalQuestions + ' пунктов перед отправкой!');
+            return; // Останавливаем отправку
+        }
+
+        const btn = document.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.innerText = 'ОТПРАВКА...';
+
+        // Собираем данные
+        const formData = {
+            timestamp: new Date().toISOString(),
+            machine_id: "CAT-320-TEST",
+            results: {}
+        };
+
+        checkedInputs.forEach(input => {
+            formData.results[input.name] = input.value;
+        });
+
+        console.log('Собранные данные:', formData);
+
+        // Имитация отправки
+        setTimeout(() => {
+            alert('Отчет успешно сформирован! В консоли можно увидеть данные.');
+            btn.disabled = false;
+            btn.innerText = 'ОТПРАВИТЬ ОТЧЕТ';
+        }, 1500);
+    }
+    </script>
+</body>
+</html>
