@@ -1,0 +1,281 @@
+:root {
+  --primary: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --gray: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, system-ui, sans-serif;
+  background-color: var(--bg);
+  margin: 0;
+  padding: 15px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── ЛОГИН ─────────────────────────────────────────── */
+
+#login-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+}
+
+.login-card h2 {
+  margin: 0 0 10px 0;
+}
+
+.login-card p {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  text-align: center;
+  border: 2px solid var(--gray);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.auth-input:focus {
+  border-color: var(--primary);
+}
+
+/* ── ОСНОВНОЙ КОНТЕНТ ──────────────────────────────── */
+
+#app-content {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 10px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.header p {
+  margin: 5px 0;
+  color: #64748b;
+}
+
+.header-inspector {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.header-inspector span {
+  color: #64748b;
+}
+
+.header-inspector strong {
+  color: var(--primary);
+}
+
+/* ── КАРТОЧКИ КАТЕГОРИЙ ────────────────────────────── */
+
+.category {
+  background: var(--card);
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.category-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.category-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--primary);
+  margin-right: 10px;
+  border-radius: 2px;
+}
+
+/* ── ПУНКТЫ ОСМОТРА ────────────────────────────────── */
+
+.check-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.check-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-group label {
+  flex: 1;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  background: var(--gray);
+  color: #94a3b8;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btn-group input {
+  display: none;
+}
+
+.btn-group input[value="ok"]:checked + label {
+  background: var(--success);
+  color: white;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.btn-group input[value="bad"]:checked + label {
+  background: var(--danger);
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-group input:not(:checked) + label {
+  opacity: 0.4;
+}
+
+.btn-group input:checked + label {
+  opacity: 1;
+}
+
+/* ── ФОТО ──────────────────────────────────────────── */
+
+.photo-section {
+  margin-top: 15px;
+  display: none;
+  background: #fff7ed;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px dashed #fdba74;
+}
+
+.photo-section span {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #9a3412;
+}
+
+/* ── ИСТОРИЯ ───────────────────────────────────────── */
+
+#history-section {
+  margin-bottom: 30px;
+}
+
+#history-section h3 {
+  margin-bottom: 15px;
+}
+
+.history-item {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.history-item-status {
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+/* ── КНОПКИ ────────────────────────────────────────── */
+
+.submit-btn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 22px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.submit-btn.login-btn {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+hr.divider {
+  border: 0;
+  border-top: 1px solid var(--gray);
+  margin: 30px 0;
+}

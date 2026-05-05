@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Система Осмотра Техники</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- ЭКРАН ЛОГИНА -->
+  <div id="login-overlay">
+    <div class="login-card">
+      <h2>Вход в систему</h2>
+      <p>Введите логин и пароль</p>
+      <input type="text" id="username-field" class="auth-input" placeholder="Логин" autocomplete="username">
+      <input type="password" id="password-field" class="auth-input" placeholder="Пароль" autocomplete="current-password">
+      <button class="submit-btn login-btn" id="login-btn" onclick="handleLogin()">ВОЙТИ</button>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <div id="app-content">
+
+    <div class="header">
+      <h2 id="machine-title">Загрузка...</h2>
+      <p id="machine-info">Проверка базы данных...</p>
+      <div class="header-inspector">
+        <span>Инспектор:</span>
+        <strong id="driver-display">---</strong>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div id="history-section">
+      <h3>Моя история осмотров</h3>
+      <div id="history-list">
+        <p style="color:#64748b;font-size:0.9rem">Загрузка истории...</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <form id="inspection-form">
+
+      <div class="category">
+        <div class="category-title">Ходовая часть</div>
+
+        <div class="check-item">
+          <span class="item-name">Колёса / Шины (давление, износ)</span>
+          <div class="btn-group">
+            <input type="radio" name="wheels" id="wheels_ok" value="ok">
+            <label for="wheels_ok" onclick="togglePhoto('photo_wheels', false)">ОК</label>
+            <input type="radio" name="wheels" id="wheels_bad" value="bad">
+            <label for="wheels_bad" onclick="togglePhoto('photo_wheels', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_wheels" class="photo-section">
+            <span>📸 Сделайте фото неисправности:</span>
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+
+        <div class="check-item">
+          <span class="item-name">Гусеницы (натяжение, болты)</span>
+          <div class="btn-group">
+            <input type="radio" name="tracks" id="tracks_ok" value="ok">
+            <label for="tracks_ok" onclick="togglePhoto('photo_tracks', false)">ОК</label>
+            <input type="radio" name="tracks" id="tracks_bad" value="bad">
+            <label for="tracks_bad" onclick="togglePhoto('photo_tracks', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_tracks" class="photo-section">
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-title">Кузов и кабина</div>
+
+        <div class="check-item">
+          <span class="item-name">Стёкла, зеркала, свет</span>
+          <div class="btn-group">
+            <input type="radio" name="glass" id="glass_ok" value="ok">
+            <label for="glass_ok" onclick="togglePhoto('photo_glass', false)">ОК</label>
+            <input type="radio" name="glass" id="glass_bad" value="bad">
+            <label for="glass_bad" onclick="togglePhoto('photo_glass', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_glass" class="photo-section">
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+
+        <div class="check-item">
+          <span class="item-name">Огнетушитель (срок, пломба)</span>
+          <div class="btn-group">
+            <input type="radio" name="fire" id="fire_ok" value="ok">
+            <label for="fire_ok" onclick="togglePhoto('photo_fire', false)">ОК</label>
+            <input type="radio" name="fire" id="fire_bad" value="bad">
+            <label for="fire_bad" onclick="togglePhoto('photo_fire', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_fire" class="photo-section">
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-title">Двигатель и уровни</div>
+
+        <div class="check-item">
+          <span class="item-name">Масло (ДВС, гидравлика)</span>
+          <div class="btn-group">
+            <input type="radio" name="oil" id="oil_ok" value="ok">
+            <label for="oil_ok" onclick="togglePhoto('photo_oil', false)">ОК</label>
+            <input type="radio" name="oil" id="oil_bad" value="bad">
+            <label for="oil_bad" onclick="togglePhoto('photo_oil', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_oil" class="photo-section">
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+
+        <div class="check-item">
+          <span class="item-name">Антифриз / Радиатор</span>
+          <div class="btn-group">
+            <input type="radio" name="coolant" id="coolant_ok" value="ok">
+            <label for="coolant_ok" onclick="togglePhoto('photo_coolant', false)">ОК</label>
+            <input type="radio" name="coolant" id="coolant_bad" value="bad">
+            <label for="coolant_bad" onclick="togglePhoto('photo_coolant', true)">ПРОБЛЕМА</label>
+          </div>
+          <div id="photo_coolant" class="photo-section">
+            <input type="file" accept="image/*" capture="camera">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+        ОТПРАВИТЬ ОТЧЕТ
+      </button>
+
+    </form>
+  </div>
+
+  <!-- JS: порядок важен — api.js первым -->
+  <script src="/js/api.js"></script>
+  <script src="/js/history.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/auth.js"></script>
+
+</body>
+</html>
