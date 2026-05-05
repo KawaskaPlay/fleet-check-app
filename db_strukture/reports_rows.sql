@@ -1,0 +1,1 @@
+INSERT INTO "public"."reports" ("id", "created_at", "machine_id", "driver_id", "results", "photos") VALUES (3, '2026-04-29 09:52:50.581284+00', 1, 1, '{"oil": "ok", "fire": "bad", "glass": "ok", "tracks": "ok", "wheels": "ok", "coolant": "ok"}', '[]');

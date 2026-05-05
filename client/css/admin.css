@@ -1,0 +1,359 @@
+:root {
+  --primary: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── ЛОГИН ─────────────────────────────────────────── */
+
+#login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--card);
+  padding: 36px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 360px;
+}
+
+.login-card h2 { margin-bottom: 6px; }
+.login-card p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus, .field select:focus {
+  border-color: var(--primary);
+}
+
+/* ── ШАПКА ─────────────────────────────────────────── */
+
+#app-screen { display: none; }
+
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-brand {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.topbar-user {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── ТАБЫ ──────────────────────────────────────────── */
+
+.tabs {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 24px;
+}
+
+.tab-btn {
+  padding: 14px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ── КОНТЕНТ ───────────────────────────────────────── */
+
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── КАРТОЧКА СЕКЦИИ ───────────────────────────────── */
+
+.section-card {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header h3 { font-size: 1rem; }
+
+/* ── ТАБЛИЦА ───────────────────────────────────────── */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #f8fafc;
+  vertical-align: middle;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #f8fafc; }
+
+/* ── ФОРМА ДОБАВЛЕНИЯ ──────────────────────────────── */
+
+.add-form {
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.add-form .field { margin-bottom: 0; flex: 1; min-width: 140px; }
+
+/* ── КНОПКИ ────────────────────────────────────────── */
+
+.btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary  { background: var(--primary); color: white; }
+.btn-danger   { background: var(--danger);  color: white; }
+.btn-success  { background: var(--success); color: white; }
+.btn-ghost    { background: var(--border);  color: var(--text); }
+
+/* ── БЕЙДЖИ ────────────────────────────────────────── */
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-ok      { background: #dcfce7; color: #15803d; }
+.badge-bad     { background: #fee2e2; color: #b91c1c; }
+.badge-admin   { background: #dbeafe; color: #1d4ed8; }
+.badge-driver  { background: #f1f5f9; color: var(--muted); }
+
+/* ── ИСТОРИЯ ОТЧЁТОВ ───────────────────────────────── */
+
+.report-card {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-card:last-child { border-bottom: none; }
+
+.report-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.report-meta strong { font-size: 0.95rem; }
+.report-meta span   { font-size: 0.82rem; color: var(--muted); }
+
+.results-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.result-chip {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.result-chip.ok  { background: #dcfce7; color: #15803d; }
+.result-chip.bad { background: #fee2e2; color: #b91c1c; font-weight: 700; }
+
+.photos-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.photo-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.photo-thumb:hover { transform: scale(1.05); }
+
+/* ── ФИЛЬТРЫ ───────────────────────────────────────── */
+
+.filters {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filters label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+
+.filters select {
+  padding: 7px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+/* ── ЛАЙТБОКС ──────────────────────────────────────── */
+
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+#lightbox.open { display: flex; }
+
+#lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+}
+
+/* ── INLINE EDIT ───────────────────────────────────── */
+
+.edit-input {
+  padding: 6px 8px;
+  border: 1.5px solid var(--primary);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 100%;
+  outline: none;
+}
+
+.inline-actions { display: flex; gap: 6px; }
+
+/* ── НАЗВАНИЯ ПУНКТОВ ──────────────────────────────── */
+
+.field-labels {
+  wheels: 'Шины';
+}
+
+@media (max-width: 600px) {
+  .add-form { flex-direction: column; }
+  .add-form .field { min-width: unset; }
+  .topbar { padding: 0 12px; }
+  .tabs { padding: 0 8px; }
+  .tab-btn { padding: 12px 12px; font-size: 0.8rem; }
+}

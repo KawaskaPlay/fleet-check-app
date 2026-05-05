@@ -51,4 +51,21 @@ const api = {
   getMyHistory(limit = 10) {
     return request(`/reports/my?limit=${limit}`);
   },
+
+  uploadPhoto(file, machine_id, field) {
+    const t = token.get();
+    const formData = new FormData();
+    formData.append('photo', file);
+    formData.append('machine_id', machine_id);
+    formData.append('field', field);
+
+    return fetch(API_BASE + '/photos/upload', {
+      method: 'POST',
+      headers: { ...(t ? { Authorization: `Bearer ${t}` } : {}) },
+      body: formData,
+    }).then(res => res.json()).then(data => {
+      if (data.error) throw new Error(data.error);
+      return data;
+    });
+  },
 };

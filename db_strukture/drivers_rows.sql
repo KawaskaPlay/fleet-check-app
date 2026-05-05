@@ -1,0 +1,1 @@
+INSERT INTO "public"."drivers" ("id", "name", "username", "password_hash", "role") VALUES (1, 'Макс', 'max', '$2a$10$ruuUv/AmdiI8KYLJlCVpdeURYse0/aFB78Onji/0afPPWRz87EBwa', "admin");

@@ -1,0 +1,1 @@
+INSERT INTO "public"."machines" ("id", "name", "plate_number", "type", "last_service") VALUES (1, 'пежо', '123ABC', null, '2026-04-22');
