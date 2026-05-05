@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Система Осмотра Техники</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -49,19 +50,20 @@
             text-align: center;
         }
 
-        .pin-input {
+        /* Обновленные стили для инпутов */
+        .auth-input {
             width: 100%;
             padding: 15px;
-            font-size: 24px;
+            font-size: 16px;
             text-align: center;
             border: 2px solid var(--gray);
             border-radius: 12px;
-            margin: 20px 0;
-            letter-spacing: 8px;
+            margin-bottom: 15px;
             outline: none;
+            transition: border-color 0.2s;
         }
 
-        .pin-input:focus { border-color: var(--primary); }
+        .auth-input:focus { border-color: var(--primary); }
 
         /* ОСНОВНОЙ КОНТЕНТ */
         #app-content { display: none; max-width: 600px; margin: 0 auto; }
@@ -146,7 +148,6 @@
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
         }
 
-        /* Неактивные кнопки становятся тусклыми при выборе другой */
         .btn-group input:not(:checked) + label { opacity: 0.4; }
         .btn-group input:checked + label { opacity: 1; }
 
@@ -191,9 +192,12 @@
     <div id="login-overlay">
         <div class="login-card">
             <h2 style="margin:0 0 10px 0;">Вход в систему</h2>
-            <p style="color: #64748b; font-size: 0.9rem;">Введите ПИН-код для начала осмотра</p>
-            <input type="password" id="pin-field" class="pin-input" placeholder="****" inputmode="numeric" maxlength="4">
-            <button class="submit-btn" id="login-btn" onclick="handleLogin()">АВТОРИЗОВАТЬСЯ</button>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Введите логин и пароль</p>
+            
+            <input type="text" id="username-field" class="auth-input" placeholder="Логин" autocomplete="username">
+            <input type="password" id="password-field" class="auth-input" placeholder="Пароль" autocomplete="current-password">
+            
+            <button class="submit-btn" id="login-btn" onclick="handleLogin()" style="margin-top: 5px; margin-bottom: 0;">ВОЙТИ</button>
         </div>
     </div>
 
@@ -206,6 +210,13 @@
                 <span id="driver-display" style="font-weight: bold; color: var(--primary);">---</span>
             </div>
         </div>
+        <hr style="border: 0; border-top: 1px solid var(--gray); margin: 30px 0;">
+<div id="history-section">
+    <h3 style="margin-bottom: 15px;">Моя история осмотров</h3>
+    <div id="history-list">
+        <p style="color: #64748b; font-size: 0.9rem;">Загрузка истории...</p>
+    </div>
+</div>
 
         <form id="inspection-form">
             <div class="category">
@@ -312,7 +323,7 @@
         let currentDriverId = null;
         let currentMachineId = null;
 
-        // --- 2. ИНИЦИАЛИЗАЦИЯ (Загрузка данных техники) ---
+        // --- 2. ИНИЦИАЛИЗАЦИЯ ---
         async function init() {
             const params = new URLSearchParams(window.location.search);
             const mId = params.get('machine');
@@ -323,7 +334,6 @@
                 return;
             }
 
-            // Ищем машину в таблице machines
             const { data, error } = await supabaseClient
                 .from('machines')
                 .select('*')
@@ -340,34 +350,52 @@
             }
         }
 
-        // --- 3. ЛОГИКА ВХОДА (ПИН-КОД) ---
+        // --- 3. НОВАЯ ЛОГИКА ВХОДА (Логин + Пароль) ---
         async function handleLogin() {
-            const pin = document.getElementById('pin-field').value;
+            const username = document.getElementById('username-field').value.trim();
+            const password = document.getElementById('password-field').value;
             const lBtn = document.getElementById('login-btn');
 
-            if (!pin) return;
+            if (!username || !password) {
+                alert("Пожалуйста, введите логин и пароль.");
+                return;
+            }
 
             lBtn.disabled = true;
             lBtn.innerText = "ПРОВЕРКА...";
 
+            // Ищем пользователя по логину (колонка username)
             const { data, error } = await supabaseClient
                 .from('drivers')
                 .select('*')
-                .eq('pin_code', pin)
+                .eq('username', username)
                 .single();
 
             if (error || !data) {
-                alert("Неверный ПИН-код! Попробуйте еще раз.");
-                lBtn.disabled = false;
-                lBtn.innerText = "АВТОРИЗОВАТЬСЯ";
-                document.getElementById('pin-field').value = '';
-            } else {
+                alert("Пользователь с таким логином не найден!");
+                resetLogin(lBtn);
+                return;
+            }
+
+            // Проверяем пароль через bcrypt
+            const isMatch = dcodeIO.bcrypt.compareSync(password, data.password_hash);
+
+            if (isMatch) {
                 currentDriverId = data.id;
                 document.getElementById('driver-display').innerText = data.name;
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('app-content').style.display = 'block';
                 window.scrollTo(0,0);
+            } else {
+                alert("Неверный пароль!");
+                resetLogin(lBtn);
             }
+        }
+
+        function resetLogin(btn) {
+            btn.disabled = false;
+            btn.innerText = "ВОЙТИ";
+            document.getElementById('password-field').value = ''; // Очищаем только пароль
         }
 
         // --- 4. УПРАВЛЕНИЕ ИНТЕРФЕЙСОМ ---
@@ -381,7 +409,6 @@
             const form = document.getElementById('inspection-form');
             const checked = form.querySelectorAll('input[type="radio"]:checked');
             
-            // Проверка: все ли 6 пунктов заполнены?
             if (checked.length < 6) {
                 alert("Пожалуйста, ответьте на все 6 пунктов осмотра!");
                 return;
@@ -391,20 +418,19 @@
             sBtn.disabled = true;
             sBtn.innerText = "СОХРАНЕНИЕ В БАЗУ...";
 
-            // Собираем результаты в объект JSON
             const resultsObj = {};
             checked.forEach(input => {
                 resultsObj[input.name] = input.value;
             });
 
-            // Отправляем в таблицу reports
+            // Отправляем в таблицу reports (обрати внимание на data: resultsObj)
             const { error } = await supabaseClient
                 .from('reports')
                 .insert([{
                     machine_id: currentMachineId,
                     driver_id: currentDriverId,
-                    results: resultsObj,
-                    photos: [] // Оставляем пустым (для будущей загрузки файлов)
+                    data: resultsObj, 
+                    photos: [] 
                 }]);
 
             if (error) {
@@ -413,11 +439,71 @@
                 sBtn.innerText = "ОТПРАВИТЬ ОТЧЕТ";
             } else {
                 alert("Отчет успешно отправлен! Спасибо за работу.");
-                location.reload(); // Сброс для следующего осмотра
+                location.reload(); 
             }
+
         }
 
-        // Запуск при загрузке страницы
+        // Функция для загрузки истории (вызывай её после успешного логина)
+async function loadHistory() {
+    const historyList = document.getElementById('history-list');
+    
+    const { data, error } = await supabaseClient
+        .from('reports')
+        .select(`
+            id,
+            created_at,
+            data,
+            machines ( name )
+        `)
+        .eq('driver_id', currentDriverId) // Фильтр: только МОИ отчеты
+        .order('created_at', { ascending: false }) // Сначала свежие
+        .limit(10); // Последние 10 штук
+
+    if (error) {
+        historyList.innerHTML = '<p style="color:red">Ошибка загрузки истории</p>';
+        return;
+    }
+
+    if (data.length === 0) {
+        historyList.innerHTML = '<p>История пуста</p>';
+        return;
+    }
+
+    historyList.innerHTML = data.map(report => {
+        const date = new Date(report.created_at).toLocaleString('ru-RU', {
+            day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+        
+        // Считаем сколько "bad" в отчете
+        const issuesCount = Object.values(report.data).filter(v => v === 'bad').length;
+        const statusColor = issuesCount > 0 ? 'var(--danger)' : 'var(--success)';
+
+        return `
+            <div style="background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid ${statusColor}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                    <strong>${report.machines?.name || 'Техника'}</strong>
+                    <span style="color: #64748b;">${date}</span>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 5px; color: ${statusColor}">
+                    ${issuesCount > 0 ? `Найдено проблем: ${issuesCount}` : 'Замечаний нет'}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ВАЖНО: Обнови функцию handleLogin, чтобы она вызывала загрузку истории
+// Найди в своем коде место внутри handleLogin, где скрывается оверлей:
+/* 
+    if (isMatch) {
+        currentDriverId = data.id;
+        ...
+        document.getElementById('app-content').style.display = 'block';
+        loadHistory(); // <-- ДОБАВЬ ЭТУ СТРОЧКУ ЗДЕСЬ
+    }
+*/
+
         init();
     </script>
 </body>
