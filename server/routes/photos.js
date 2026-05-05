@@ -8,6 +8,7 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 const PHOTOS_DIR = path.join(__dirname, '../photos');
+fs.mkdirSync(PHOTOS_DIR, { recursive: true });
 
 const upload = multer({
   storage: multer.memoryStorage(),
